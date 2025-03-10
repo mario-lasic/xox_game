@@ -29,3 +29,8 @@ class Xox(QWidget):
     def button_clicked(self):
         pass
     
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = Xox()
+    window.show()
+    sys.exit(app.exec_())
