@@ -1,0 +1,69 @@
+/* General styles for the application */
+QWidget {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    margin: 0;
+}
+
+/* Style for the QLabel displaying the score */
+QLabel {
+    font-weight: bold;
+    padding: 4px;
+    qproperty-alignment: 'AlignCenter';
+    height: 50px;
+}
+
+/* Style for the QPushButton representing the game cells */
+QPushButton {
+    border:none;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    width: 100px;
+    height: 100px;
+}
+QPushButton:hover{
+    background-color: #353535;
+    color: #ffffff;
+}
+
+QPushButton:disabled {
+    color: #eee;
+}
+
+QPushButton[row~="0"] {
+    border-bottom: 1px solid #EEEEEE;
+}
+QPushButton[dialog_buttons]{
+    border: 1px solid #ffffff;
+    border-radius: 6px;
+    width: 200px;
+    margin: 20px;
+}
+
+QPushButton[row~="1"]{
+    border-bottom: 1px solid #EEEEEE;
+}
+QPushButton[column~="0"]{
+    border-right: 1px solid #EEEEEE;
+}
+QPushButton[column~="1"]{
+    border-right: 1px solid #EEEEEE;
+}
+
+/* Style for the QDialog to get player names */
+QDialog {
+    padding: 20px;
+}
+
+QLineEdit {
+    border: 1px solid #ccc;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+QDialogButtonBox {
+    padding-top: 10px;
+    border: 1px solid #ccc
+}
