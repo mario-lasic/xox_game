@@ -24,10 +24,8 @@ def set_score(winner):
 
 class Game():
     def __init__(self):
-        self.players = []
         self.players_signs = ['X', 'O']
         self.current_player = random.choice(self.players_signs)
-        self.score = get_score()
         self.board = [['', '', ''], ['', '', ''], ['', '', '']]
 
     def get_player(self):
@@ -104,14 +102,12 @@ class Xox(QWidget):
         super().__init__()
         self.setWindowTitle('XOX')
         self.setGeometry(100, 100, 400, 400)
-        self.setFixedSize(QSize(450,500))
+        self.setFixedSize(QSize(450, 500))
         self.game = Game()
-        
+
         dialog = PlayerDialog()
         if dialog.exec() == QDialog.Accepted:
             self.player1, self.player2 = dialog.get_names()
-            self.game.players.append(self.player1)
-            self.game.players.append(self.player2)
         else:
             sys.exit()
 
@@ -124,10 +120,7 @@ class Xox(QWidget):
         self.score_player2 = QLabel(f'{self.player2} (O) :{score[1]}')
         self.score_player1.setFixedHeight(50)
         self.score_player2.setFixedHeight(50)
-        if self.current_player == 'X':
-            self.score_player1.setStyleSheet('color: green')
-        else:
-            self.score_player2.setStyleSheet('color: green')
+        self.update_score_color()
 
         layout = QGridLayout()
         layout.addWidget(self.score_player1, 0, 0, 1, 1)
@@ -159,32 +152,18 @@ class Xox(QWidget):
         self.game.board[int(sender.property('row'))][int(
             sender.property('column'))] = cp
         status = self.game.check_winner()
-        
+
         if status == 'winner':
-            msg_box = QMessageBox(self)
-            msg_box.setWindowTitle("Game Over")
-            msg_box.setText(f"{self.player1 if cp == 'X' else self.player2} ({cp}) wins!")
-            msg_box.setStandardButtons(QMessageBox.Ok)
-            msg_box.exec()
+            self.show_message(f"{self.player1 if cp == 'X' else self.player2} ({cp}) wins!")
             set_score(cp)
             self.restart()
         elif status == 'draw':
-            msg_box = QMessageBox(self)
-            msg_box.setWindowTitle("Game Over")
-            msg_box.setText("It's a draw!")
-            msg_box.setStandardButtons(QMessageBox.Ok)
-            msg_box.exec()
+            self.show_message("It's a draw!")
             self.restart()
         else:
             self.game.switch_player()
             sender.setEnabled(False)
-        new_turn = self.game.get_player()
-        if new_turn == 'X':
-            self.score_player1.setStyleSheet('color: green')
-            self.score_player2.setStyleSheet('color: #eee')
-        else:
-            self.score_player1.setStyleSheet('color: #eee')
-            self.score_player2.setStyleSheet('color: green')
+        self.update_score_color()
 
     def restart(self):
         self.game = Game()
@@ -196,13 +175,22 @@ class Xox(QWidget):
                 button = self.buttons[(row, column)]
                 button.setText('')
                 button.setEnabled(True)
-        if self.current_player == 'X':
+        self.update_score_color()
+
+    def show_message(self, message):
+        msg_box = QMessageBox(self)
+        msg_box.setWindowTitle("Game Over")
+        msg_box.setText(message)
+        msg_box.setStandardButtons(QMessageBox.Ok)
+        msg_box.exec()
+
+    def update_score_color(self):
+        if self.game.get_player() == 'X':
             self.score_player1.setStyleSheet('color: green')
             self.score_player2.setStyleSheet('color: #eee')
         else:
             self.score_player1.setStyleSheet('color: #eee')
             self.score_player2.setStyleSheet('color: green')
-
 
 # Run the application
 if __name__ == "__main__":
