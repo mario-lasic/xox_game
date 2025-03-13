@@ -67,3 +67,23 @@ QDialogButtonBox {
     padding-top: 10px;
     border: 1px solid #ccc
 }
+
+QMessageBox{
+    width: 100px;
+    height 100px;
+    qproperty-alignment: 'AlignCenter';
+}
+
+QMessageBox QPushButton {  
+    width: 50px;
+    height: 20px;
+    border: 1px solid #eee;
+    color: white;               
+    font-size: 14px;           
+    border-radius: 5px;         
+    padding: 10px;  
+}
+
+QMessageBox QPushButton:hover {
+    background-color: #353535;  
+}

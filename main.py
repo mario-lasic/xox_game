@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import (QApplication, QWidget,
                                QPushButton, QLabel, QGridLayout, QDialog, QVBoxLayout,
-                               QLineEdit, QDialogButtonBox, QMenuBar,)
+                               QLineEdit, QDialogButtonBox, QMenuBar, QMessageBox)
 from PySide6.QtCore import Qt, QSize
 import sys
 import random
@@ -120,11 +120,18 @@ class Xox(QWidget):
     def createUI(self):
         self.signs = [['', '', ''], ['', '', ''], ['', '', '']]
         self.current_player = self.game.current_player
-        self.score_text = QLabel(f'{self.player1}(X) {score[0]} - {score[1]} {self.player2}(O)')
-        self.score_text.setFixedHeight(50)
+        self.score_player1 = QLabel(f'{self.player1} (X) :{score[0]}')
+        self.score_player2 = QLabel(f'{self.player2} (O) :{score[1]}')
+        self.score_player1.setFixedHeight(50)
+        self.score_player2.setFixedHeight(50)
+        if self.current_player == 'X':
+            self.score_player1.setStyleSheet('color: green')
+        else:
+            self.score_player2.setStyleSheet('color: green')
 
         layout = QGridLayout()
-        layout.addWidget(self.score_text, 0, 0, 1, 3)
+        layout.addWidget(self.score_player1, 0, 0, 1, 1)
+        layout.addWidget(self.score_player2, 0, 2, 1, 1)
 
         # Create buttons for the board
         self.buttons = {}
@@ -154,24 +161,47 @@ class Xox(QWidget):
         status = self.game.check_winner()
         
         if status == 'winner':
+            msg_box = QMessageBox(self)
+            msg_box.setWindowTitle("Game Over")
+            msg_box.setText(f"{self.player1 if cp == 'X' else self.player2} ({cp}) wins!")
+            msg_box.setStandardButtons(QMessageBox.Ok)
+            msg_box.exec()
             set_score(cp)
             self.restart()
         elif status == 'draw':
+            msg_box = QMessageBox(self)
+            msg_box.setWindowTitle("Game Over")
+            msg_box.setText("It's a draw!")
+            msg_box.setStandardButtons(QMessageBox.Ok)
+            msg_box.exec()
             self.restart()
         else:
             self.game.switch_player()
             sender.setEnabled(False)
+        new_turn = self.game.get_player()
+        if new_turn == 'X':
+            self.score_player1.setStyleSheet('color: green')
+            self.score_player2.setStyleSheet('color: #eee')
+        else:
+            self.score_player1.setStyleSheet('color: #eee')
+            self.score_player2.setStyleSheet('color: green')
 
     def restart(self):
         self.game = Game()
         self.current_player = self.game.current_player
-        self.score_text.setText(f'{self.player1}(X) {score[0]} - {score[1]} {self.player2}(O)')
+        self.score_player1.setText(f'{self.player1} (X) :{score[0]}')
+        self.score_player2.setText(f'{self.player2} (O) :{score[1]}')
         for row in range(3):
             for column in range(3):
                 button = self.buttons[(row, column)]
                 button.setText('')
                 button.setEnabled(True)
-        
+        if self.current_player == 'X':
+            self.score_player1.setStyleSheet('color: green')
+            self.score_player2.setStyleSheet('color: #eee')
+        else:
+            self.score_player1.setStyleSheet('color: #eee')
+            self.score_player2.setStyleSheet('color: green')
 
 
 # Run the application
