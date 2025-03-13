@@ -5,14 +5,17 @@ from PySide6.QtCore import Qt, QSize
 import sys
 import random
 
-# Get player names from the user
 
 global score
 score = [0, 0]
 
+# Global score variable
+
 
 def get_score():
     return score
+
+# Functions to get and set the score
 
 
 def set_score(winner):
@@ -20,6 +23,12 @@ def set_score(winner):
         score[0] += 1
     else:
         score[1] += 1
+
+
+def get_score():
+    return score
+
+# Game class to handle game logic
 
 
 class Game():
@@ -36,24 +45,24 @@ class Game():
             0] if self.current_player == self.players_signs[1] else self.players_signs[1]
 
     def check_winner(self):
+        # Check rows for a winner
         for row in self.board:
             if row[0] == row[1] == row[2] != '':
                 return 'winner'
-
+        # Check columns for a winner
         for column in range(3):
             if self.board[0][column] == self.board[1][column] == self.board[2][column] != '':
                 return 'winner'
-
+        # Check diagonals for a winner
         if self.board[0][0] == self.board[1][1] == self.board[2][2] != '':
             return 'winner'
-
         if self.board[0][2] == self.board[1][1] == self.board[2][0] != '':
             return 'winner'
-
+        # Check for any empty cells
         for row in self.board:
             if '' in row:
                 return 'continue'
-
+        # If no winner and no empty cells, it's a draw
         return 'draw'
 
 
@@ -105,6 +114,7 @@ class Xox(QWidget):
         self.setFixedSize(QSize(450, 500))
         self.game = Game()
 
+        # Show dialog to get player names
         dialog = PlayerDialog()
         if dialog.exec() == QDialog.Accepted:
             self.player1, self.player2 = dialog.get_names()
@@ -140,8 +150,6 @@ class Xox(QWidget):
 
         layout.setSpacing(0)
         layout.setContentsMargins(0, 0, 0, 0)
-
-        # Set the layout for the QWidget
         self.setLayout(layout)
         self.update()
 
@@ -154,7 +162,8 @@ class Xox(QWidget):
         status = self.game.check_winner()
 
         if status == 'winner':
-            self.show_message(f"{self.player1 if cp == 'X' else self.player2} ({cp}) wins!")
+            self.show_message(
+                f"{self.player1 if cp == 'X' else self.player2} ({cp}) wins!")
             set_score(cp)
             self.restart()
         elif status == 'draw':
@@ -191,6 +200,7 @@ class Xox(QWidget):
         else:
             self.score_player1.setStyleSheet('color: #eee')
             self.score_player2.setStyleSheet('color: green')
+
 
 # Run the application
 if __name__ == "__main__":
